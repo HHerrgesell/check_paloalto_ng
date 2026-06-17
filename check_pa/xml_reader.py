@@ -39,10 +39,13 @@ class XMLReader:
             else:
                 raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 
-        if resp.status_code != 200:
-            raise CheckError('Expected status code: 200 (OK), returned'
-                             ' status code was: %d' % resp.status_code)
         soup = BeautifulSoup(resp.content, "lxml-xml")
+
+        if resp.status_code != 200:
+            msg_tag = soup.find('msg')
+            msg = msg_tag.text.strip() if msg_tag else 'Unknown error'
+            raise CheckError('HTTP Status: %d - Error: %s'
+                             % (resp.status_code, msg))
         result = soup.response['status']
         if result != 'success':
             raise CheckError('Request didn\'t succeed, result was %s'
@@ -62,10 +65,13 @@ class XMLReader:
         except Exception as e:
             raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 
-        if resp.status_code != 200:
-            raise CheckError('Expected status code: 200 (OK), returned'
-                             ' status code was: %d' % resp.status_code)
         soup = BeautifulSoup(resp.content, "lxml-xml")
+
+        if resp.status_code != 200:
+            msg_tag = soup.find('msg')
+            msg = msg_tag.text.strip() if msg_tag else 'Unknown error'
+            raise CheckError('HTTP Status: %d - Error: %s'
+                             % (resp.status_code, msg))
         result = soup.report['reportname']
         if result != self.cmd:
             raise CheckError('Request didn\'t succeed, result was %s'
