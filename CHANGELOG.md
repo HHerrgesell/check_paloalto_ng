@@ -2,6 +2,35 @@
 
 <!-- version list -->
 
+## v0.9.0 (2026-06-17)
+
+### Bug Fixes
+
+- Repair test suite and verify_ssl/diskspace regressions
+  ([`7884253`](https://github.com/TeraIT-at/check_paloalto_ng/commit/788425328f784a812e28c9889002935449c99801))
+
+- Sync __init__ version to 0.8.1
+  ([`81c2a96`](https://github.com/TeraIT-at/check_paloalto_ng/commit/81c2a9684ed2ec849d02ba83efb90d03166177b9))
+
+### Build System
+
+- Set up local semantic-release flow and modernize CI config
+  ([`777b12e`](https://github.com/TeraIT-at/check_paloalto_ng/commit/777b12ecfde51217f9c35d11bca9adebc79138b2))
+
+### Continuous Integration
+
+- Add GitHub Actions test matrix for Python 3.9-3.14
+  ([`5b1a524`](https://github.com/TeraIT-at/check_paloalto_ng/commit/5b1a5246292d1c4bc93597872017098692d46b55))
+
+- Trigger workflow on main after branch rename
+  ([`5505f14`](https://github.com/TeraIT-at/check_paloalto_ng/commit/5505f145728e09b8a4d1c0165167c01525eefb8e))
+
+### Features
+
+- Surface Palo Alto API error message from non-200 responses
+  ([`9659a8e`](https://github.com/TeraIT-at/check_paloalto_ng/commit/9659a8e9747a8706ca8334eda7093283e206638e))
+
+
 ## v0.8.1 (2025-11-09)
 
 ### Fix
