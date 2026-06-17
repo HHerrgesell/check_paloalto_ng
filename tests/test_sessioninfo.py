@@ -23,6 +23,8 @@ class TestSessionInfo(object):
         """setup host and token for test of Palo Alto Firewall"""
         cls.host = 'localhost'
         cls.token = 'test'
+        cls.verify_ssl = False
+        cls.verbose = 0
 
     @responses.activate
     def test_sessinfo(self):

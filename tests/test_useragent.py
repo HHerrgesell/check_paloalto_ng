@@ -22,6 +22,9 @@ class TestUserAgent(object):
         """setup host and token for test of Palo Alto Firewall"""
         cls.host = 'localhost'
         cls.token = 'test'
+        cls.verify_ssl = False
+        cls.verbose = 0
+        cls.agent = 'test'
 
     @responses.activate
     def test_useragent(self):

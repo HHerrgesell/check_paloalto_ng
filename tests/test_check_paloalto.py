@@ -21,6 +21,7 @@ class TestCheckPaloAlto(object):
         """setup host and token for test of Palo Alto Firewall"""
         cls.host = 'localhost'
         cls.token = '123456ABC'
+        cls.verify_ssl = False
         cls.warn = 80
         cls.crit = 90
         cls.verbose = 1

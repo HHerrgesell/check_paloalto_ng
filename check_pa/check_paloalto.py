@@ -327,11 +327,11 @@ def parse_args(args):
     parser_qos.add_argument(
         '-w', '--warn',
         metavar='WARN', type=int, default=8000000,
-        help='Warning if qos is higher. In kbps (default: %(default))')
+        help='Warning if qos is higher. In kbps (default: %(default)s)')
     parser_qos.add_argument(
         '-c', '--crit',
         metavar='CRIT', type=int, default=9000000,
-        help='Critical if qos is higher. In kbps (default: %(default))')
+        help='Critical if qos is higher. In kbps (default: %(default)s)')
     parser_qos.set_defaults(func=qos)
 
     # Sub-Parser for command 'reports'.

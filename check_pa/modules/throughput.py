@@ -83,7 +83,7 @@ class Throughput(np.Resource):
         self.verbose = verbose
         self.interface_name = interface_name
         self.cmd = '<show><counter><interface>' + str(self.interface_name) + '</interface></counter></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

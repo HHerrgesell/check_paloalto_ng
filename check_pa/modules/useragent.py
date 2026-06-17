@@ -46,9 +46,12 @@ class UserAgent(np.Resource):
 
         for useragent in useragents:
             agent_details = useragent.split('\n')
-            name = agent_details[0]
-            status = agent_details[1].split(':')[1].strip()
-            last_heared = int(agent_details[20].split(':')[1].strip())
+            try:
+                name = agent_details[0]
+                status = agent_details[1].split(':')[1].strip()
+                last_heared = int(agent_details[20].split(':')[1].strip())
+            except (IndexError, ValueError):
+                raise CheckError('Unexpected user agent output format')
 
             _log.info('Checking %s ', name)
             _log.info('Found status %s', status)

@@ -34,7 +34,7 @@ class Cluster(np.Resource):
         self.cmd = '<show><high-availability><state><%2Fstate' \
                    '>' \
                    '<%2Fhigh-availability><%2Fshow>'
-        self.xml_obj = XMLReader(self.host, self.token, self.verbose, self.cmd, self.ssl_verify)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

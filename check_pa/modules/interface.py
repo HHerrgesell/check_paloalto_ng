@@ -23,7 +23,7 @@ def create_check(args):
         exclude_interfaces = str(args.exclude).split(",")
         check.add(Interface(args.host, args.token, args.verify_ssl, args.verbose, exclude_interfaces=exclude_interfaces))
     else:
-        check.add(Interface(args.host, args.token, args.verify_ssl))
+        check.add(Interface(args.host, args.token, args.verify_ssl, args.verbose))
 
     check.add(InterfaceContext('alarm'))
     check.add(InterfaceSummary())
