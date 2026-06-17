@@ -8,7 +8,7 @@ import pytest
 import check_pa.modules.throughput
 
 
-@pytest.yield_fixture(scope="function")
+@pytest.fixture(scope="function")
 def statefile(delete = True):
     statefile_path = check_pa.modules.throughput.get_statefile_path()
     yield statefile_path
