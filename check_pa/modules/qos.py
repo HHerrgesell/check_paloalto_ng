@@ -4,7 +4,7 @@ import logging
 
 import nagiosplugin as np
 
-from check_pa.xml_reader import XMLReader, Finder
+from check_pa.xml_reader import XMLReader
 
 _log = logging.getLogger('nagiosplugin')
 
