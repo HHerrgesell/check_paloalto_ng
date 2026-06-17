@@ -1,8 +1,12 @@
 # Releasing
 
-Releases are cut locally with [python-semantic-release]; the PyPI upload runs
-from the developer machine, so no token is stored in CI. GitHub Actions
-(`.github/workflows/tests.yml`) only runs the test matrix.
+Releases are cut locally with [python-semantic-release]; the version bump,
+commit, tag, build and PyPI upload all run locally, so no token is stored in CI.
+GitHub Actions (`.github/workflows/tests.yml`) only runs the test matrix.
+
+No GitHub *Release* objects are created and nothing is pushed automatically: the
+release command runs with `--no-vcs-release` (so no `GH_TOKEN` is required) and
+`--no-push` (the push is a separate, manual step after reviewing the result).
 
 ## Versioning
 
@@ -27,24 +31,43 @@ derives it via `attr:`. Semantic-release bumps `__init__.py`, updates
 
 ## One-time setup
 
+Install the release tools into a virtual environment (do not install globally):
+
 ```bash
-pip install python-semantic-release build twine
+python -m venv .venv
+.venv/bin/pip install python-semantic-release build twine
 ```
+
+Activate it (`source .venv/bin/activate`) before running the release commands
+below, or call the tools via `.venv/bin/...`. Alternatively, install the CLIs in
+isolation with `pipx install python-semantic-release` and `pipx install twine`.
 
 PyPI credentials are read from `~/.pypirc` (or a configured keyring).
 
 ## Cutting a release
 
-From a clean, up-to-date `main`:
+The recommended path is the gate script, which refuses to release unless the
+tree is clean, the branch is `main`, the tests pass, and (if `gh` is available)
+the latest CI run is green:
 
 ```bash
-# 1. Bump version, update CHANGELOG, commit, tag, and build dist/ — all local.
-semantic-release version
+./scripts/release.sh
+```
 
-# 2. Push the release commit and tag.
+It bumps the version, updates `CHANGELOG.md`, commits and tags, and builds
+`dist/` — without pushing and without creating a GitHub release. After
+reviewing the result, finish manually:
+
+```bash
+git push origin main --follow-tags     # push the release commit and tag
+twine upload dist/*                     # upload to PyPI
+```
+
+The equivalent without the gate script:
+
+```bash
+semantic-release version --no-push --no-vcs-release
 git push origin main --follow-tags
-
-# 3. Upload the built artifacts to PyPI.
 twine upload dist/*
 ```
 
@@ -55,12 +78,21 @@ semantic-release version --print            # print the next version only
 semantic-release version --noop -v          # full dry run, no writes
 ```
 
-Optionally attach the built artifacts to a GitHub Release as well (requires a
-`GH_TOKEN` in the environment):
+## Optional: GitHub Release
+
+GitHub Release objects are not created by the steps above. To add one for a tag,
+use the GitHub CLI, which uses its own stored login (no token in the environment):
 
 ```bash
-semantic-release publish
+gh release create vX.Y.Z --title vX.Y.Z --generate-notes dist/check_paloalto_ng-X.Y.Z*
 ```
+
+`--generate-notes` lets GitHub build the notes; use `--notes "..."` or
+`--notes-file <file>` to supply them. If an invalid `GH_TOKEN` is exported in the
+shell it shadows the CLI login and the API returns HTTP 401 — unset it first
+(`unset GH_TOKEN`). Alternatively, let semantic-release create the release during
+the version step by providing a valid token from the CLI login:
+`GH_TOKEN=$(gh auth token) semantic-release version`.
 
 [python-semantic-release]: https://python-semantic-release.readthedocs.io/
 [Conventional Commits]: https://www.conventionalcommits.org/
