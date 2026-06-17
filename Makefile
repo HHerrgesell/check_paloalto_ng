@@ -21,7 +21,7 @@ help:
 	@echo "test-all - run tests on every Python version with tox"
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
-	@echo "release - package and upload a release"
+	@echo "release - how to cut a release (see RELEASING.md)"
 	@echo "dist - package"
 	@echo "install - install the package to the active Python's site-packages"
 
@@ -49,13 +49,13 @@ lint:
 	flake8 check_pa tests
 
 test:
-	py.test
+	PYTHONPATH=.:tests pytest tests/
 
 test-all:
 	tox
 
 coverage:
-	py.test --cov=check_pa tests/
+	PYTHONPATH=.:tests pytest --cov=check_pa tests/
 
 docs:
 	rm -f docs/check_pa.rst
@@ -65,14 +65,12 @@ docs:
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
-release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+release:
+	@echo "Releases are cut with python-semantic-release. See RELEASING.md."
 
 dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python -m build
 	ls -l dist
 
 install: clean
-	pip install -r requirements.txt
+	pip install .
