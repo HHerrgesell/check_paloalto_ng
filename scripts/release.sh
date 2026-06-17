@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Release gate: refuses to cut a release unless the tree is clean, on the
-# default branch, the test suite passes, and (if gh is available) the latest
-# CI run on the branch is green. On success it runs semantic-release locally
+# default branch, the test suite passes, and (if gh is available) the CI run for
+# the exact HEAD commit is green. On success it runs semantic-release locally
 # WITHOUT pushing and WITHOUT creating a GitHub release; the push and the PyPI
 # upload remain explicit manual steps (see RELEASING.md).
 set -euo pipefail
@@ -23,12 +23,19 @@ fi
 echo ">> Running the test suite..."
 PYTHONPATH=.:tests pytest tests/ -q
 
-# Optional: refuse if the latest CI run on the branch did not succeed.
+# Optional: refuse if the CI run for the exact HEAD commit did not succeed.
+# Matching the HEAD SHA (instead of the latest branch run) avoids passing the
+# gate on an older commit's green run.
 if command -v gh >/dev/null 2>&1; then
-    echo ">> Checking latest CI run on '$BRANCH'..."
-    CONCLUSION="$(gh run list --branch "$BRANCH" --limit 1 --json conclusion --jq '.[0].conclusion' 2>/dev/null || true)"
-    if [ -n "$CONCLUSION" ] && [ "$CONCLUSION" != "success" ]; then
-        echo "ERROR: latest CI run on '$BRANCH' concluded '$CONCLUSION', not 'success'." >&2
+    HEAD_SHA="$(git rev-parse HEAD)"
+    echo ">> Checking CI run for HEAD ($HEAD_SHA)..."
+    CONCLUSION="$(gh run list --branch "$BRANCH" --limit 20 \
+        --json headSha,conclusion \
+        --jq "[.[] | select(.headSha==\"$HEAD_SHA\")][0].conclusion" 2>/dev/null || true)"
+    if [ -z "$CONCLUSION" ]; then
+        echo ">> WARNING: no CI run found for HEAD yet; relying on the local test run above."
+    elif [ "$CONCLUSION" != "success" ]; then
+        echo "ERROR: CI run for HEAD concluded '$CONCLUSION', not 'success'." >&2
         exit 1
     fi
 fi
