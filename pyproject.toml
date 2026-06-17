@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.semantic_release]
+# Single source of truth; setup.cfg derives its version from this via attr:.
+version_variables = [
+    "check_pa/__init__.py:__version__",
+]
+commit_parser = "conventional"
+tag_format = "v{version}"
+# Stay in the 0.x series: a feat bumps the minor (0.8.1 -> 0.9.0), not to 1.0.0.
+allow_zero_version = true
+major_on_zero = false
+# Build sdist+wheel into dist/ during `semantic-release version`; upload is done
+# locally with twine (see RELEASING.md) so no PyPI token ever leaves the machine.
+build_command = "python -m pip install build && python -m build"
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"

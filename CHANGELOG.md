@@ -1,5 +1,7 @@
 # CHANGELOG
 
+<!-- version list -->
+
 ## v0.8.1 (2025-11-09)
 
 ### Fix

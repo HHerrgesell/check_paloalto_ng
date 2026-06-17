@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+# All package metadata lives in setup.cfg; the version is the single source of
+# truth in check_pa/__init__.py (setup.cfg reads it via `attr:`).
 from setuptools import setup
 
-__version__ = "0.8.1"
-
-setup(name='check_paloalto_ng',
-      version=__version__,
-)
+setup()
